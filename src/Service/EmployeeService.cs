@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 
 namespace Service
 {
@@ -12,11 +13,13 @@ namespace Service
     {
         private readonly IRepositoryManager _repositoryManager;
         private readonly ILoggerManager _loggerManager;
+        private readonly IMapper _mapper;
 
-        public EmployeeService(IRepositoryManager repositoryManager, ILoggerManager loggerManager)
+        public EmployeeService(IRepositoryManager repositoryManager, ILoggerManager loggerManager, IMapper mapper)
         {
             _repositoryManager = repositoryManager;
             _loggerManager = loggerManager;
+            _mapper = mapper;
         }
     }
 }

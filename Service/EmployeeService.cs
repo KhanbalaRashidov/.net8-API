@@ -32,15 +32,15 @@ namespace Service
             return employessDto;
         }
 
-        public EmployeeDto GetEmployee(Guid companyId, Guid employeeId, bool trackChanges)
+        public EmployeeDto GetEmployee(Guid companyId, Guid id, bool trackChanges)
         {
             var company = _repositoryManager.CompanyRepository.GetCompany(companyId, trackChanges);
             if (company is null)
                 throw new CompanyNotFoundException(companyId);
 
-            var employeeDb = _repositoryManager.EmployeeRepository.GetEmployee(companyId, employeeId, trackChanges);
+            var employeeDb = _repositoryManager.EmployeeRepository.GetEmployee(companyId, id, trackChanges);
             if (employeeDb is null)
-                throw new EmployeeNotFoundException(employeeId);
+                throw new EmployeeNotFoundException(id);
 
             var employee = _mapper.Map<EmployeeDto>(employeeDb);
 
@@ -61,6 +61,20 @@ namespace Service
             var employeeToReturn = _mapper.Map<EmployeeDto>(employeeEntity);
 
             return employeeToReturn;
+        }
+
+        public void DeleteEmployeeForCompany(Guid companyId, Guid id, bool trackChanges)
+        {
+            var company = _repositoryManager.CompanyRepository.GetCompany(companyId, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+
+            var employeeForCompany= _repositoryManager.EmployeeRepository.GetEmployee(companyId,id, trackChanges);
+            if(employeeForCompany is null)
+                throw new EmployeeNotFoundException(id);
+
+            _repositoryManager.EmployeeRepository.DeleteEmployee(employeeForCompany);
+            _repositoryManager.Save();
         }
     }
 }

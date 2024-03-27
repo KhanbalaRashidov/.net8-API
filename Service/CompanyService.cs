@@ -34,12 +34,12 @@ namespace Service
             return companiesDto;
         }
 
-        public CompanyDto GetCompany(Guid compnayId, bool trackChanges)
+        public CompanyDto GetCompany(Guid companyId, bool trackChanges)
         {
-            var company = _repositoryManager.CompanyRepository.GetCompany(compnayId, trackChanges);
+            var company = _repositoryManager.CompanyRepository.GetCompany(companyId, trackChanges);
 
             if (company is null)
-                throw new CompanyNotFoundException(compnayId);
+                throw new CompanyNotFoundException(companyId);
 
             var companyDto = _mapper.Map<CompanyDto>(company);
 
@@ -62,10 +62,13 @@ namespace Service
         {
             if (ids is null)
                 throw new IdParametersBadRequestException();
+
             var companyEntities = _repositoryManager.CompanyRepository.GetByIds(ids, trackChanges);
             if (ids.Count() != companyEntities.Count())
                 throw new CollectionByIdsBadRequestException();
+
             var companiesToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+
             return companiesToReturn;
         }
 
@@ -82,10 +85,20 @@ namespace Service
 
             _repositoryManager.Save();
 
-            var companyCollectionToReturn =_mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
+            var companyCollectionToReturn = _mapper.Map<IEnumerable<CompanyDto>>(companyEntities);
             var ids = string.Join(",", companyCollectionToReturn.Select(c => c.Id));
 
             return (companies: companyCollectionToReturn, ids: ids);
+        }
+
+        public void DeleteCompany(Guid companyId, bool trackChanges)
+        {
+            var company = _repositoryManager.CompanyRepository.GetCompany(companyId, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(companyId);
+
+            _repositoryManager.CompanyRepository.DeleteCompany(company);
+            _repositoryManager.Save();
         }
     }
 }

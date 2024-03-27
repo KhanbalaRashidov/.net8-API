@@ -100,5 +100,15 @@ namespace Service
             _repositoryManager.CompanyRepository.DeleteCompany(company);
             _repositoryManager.Save();
         }
+
+        public void UpdateCompany(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
+        {
+            var companyEntity = _repositoryManager.CompanyRepository.GetCompany(companyId, trackChanges);
+            if (companyEntity is null)
+                throw new CompanyNotFoundException(companyId);
+
+            _mapper.Map(companyForUpdate, companyEntity);
+            _repositoryManager.Save();
+        }
     }
 }

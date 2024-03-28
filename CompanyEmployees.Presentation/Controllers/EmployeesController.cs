@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
+using CompanyEmployees.Presentation.ActionFilters;
 
 namespace CompanyEmployees.Presentation.Controllers
 {
@@ -34,6 +35,7 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateEmployeeForCompany(Guid companyId, [FromBody] EmployeeForCreationDto employee)
         {
             if (employee is null)
@@ -56,6 +58,7 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPut("{id:giud}")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {
             if (employee is null)

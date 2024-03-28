@@ -36,10 +36,7 @@ namespace Service
 
         public async Task<CompanyDto> GetCompanyAsync(Guid companyId, bool trackChanges)
         {
-            var company = await _repositoryManager.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
-
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
+            var company = await GetCompanyAndCheckIfItExists(companyId,trackChanges);
 
             var companyDto = _mapper.Map<CompanyDto>(company);
 
@@ -93,9 +90,7 @@ namespace Service
 
         public async Task DeleteCompanyAsync(Guid companyId, bool trackChanges)
         {
-            var company = await _repositoryManager.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
-            if (company is null)
-                throw new CompanyNotFoundException(companyId);
+            var company = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
 
             _repositoryManager.CompanyRepository.DeleteCompany(company);
             await _repositoryManager.SaveAsync();
@@ -103,12 +98,18 @@ namespace Service
 
         public async Task UpdateCompanyAsync(Guid companyId, CompanyForUpdateDto companyForUpdate, bool trackChanges)
         {
-            var companyEntity = await _repositoryManager.CompanyRepository.GetCompanyAsync(companyId, trackChanges);
-            if (companyEntity is null)
-                throw new CompanyNotFoundException(companyId);
+            var company = await GetCompanyAndCheckIfItExists(companyId, trackChanges);
 
-            _mapper.Map(companyForUpdate, companyEntity);
+            _mapper.Map(companyForUpdate, company);
             await _repositoryManager.SaveAsync();
+        }
+        private async Task<Company> GetCompanyAndCheckIfItExists(Guid id, bool trackChanges)
+        {
+            var company = await _repositoryManager.CompanyRepository.GetCompanyAsync(id, trackChanges);
+            if (company is null)
+                throw new CompanyNotFoundException(id);
+
+            return company;
         }
     }
 }

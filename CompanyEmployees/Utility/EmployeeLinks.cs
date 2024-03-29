@@ -2,6 +2,8 @@
 using Entities.LinkModels;
 using Entities.Models;
 using Microsoft.Net.Http.Headers;
+
+//using Microsoft.Net.Http.Headers;
 using Shared.DataTransferObjects;
 
 namespace CompanyEmployees.Utility;
@@ -25,10 +27,10 @@ public class EmployeeLinks : IEmployeeLinks
     {
         var shapedEmployees = ShapeData(employeesDto, fields);
 
-        //if (ShouldGenerateLinks(httpContext))
+        if (ShouldGenerateLinks(httpContext))
             return ReturnLinkdedEmployees(employeesDto, fields, companyId, httpContext, shapedEmployees);
 
-        //return ReturnShapedEmployees(shapedEmployees);
+        return ReturnShapedEmployees(shapedEmployees);
     }
 
     private List<Entity> ShapeData(IEnumerable<EmployeeDto> employeesDto, string fields) =>

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using CompanyEmployees.Presentation.ActionFilters;
 using Shared.RequestFeatures;
 using System.Text.Json;
+using Entities.LinkModels;
 
 
 namespace CompanyEmployees.Presentation.Controllers
@@ -23,16 +24,20 @@ namespace CompanyEmployees.Presentation.Controllers
         public EmployeesController(IServiceManager service) => _service = service;
 
         [HttpGet]
+        [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
         public async Task<IActionResult> GetEmployeesForCompany(Guid companyId,
             [FromQuery] EmployeeParameters employeeParameters)
         {
-            var pagedResult = await _service.EmployeeService.GetEmployeesAsync(companyId,employeeParameters, 
-                trackChanges: false);
+            var linkParams = new LinkParameters(employeeParameters, HttpContext);
 
-            Response.Headers.Add("X-Pagination",
-            JsonSerializer.Serialize(pagedResult.metaData));
+            var result = await _service.EmployeeService.GetEmployeesAsync(companyId,
+                linkParams, trackChanges: false);
 
-            return Ok(pagedResult.employees);
+            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metaData));
+
+            return result.linkResponse.HasLinks ? Ok(result.linkResponse.LinkedEntities) : 
+                Ok(result.linkResponse.ShapedEntities);
+
         }
 
         [HttpGet("{id:guid}", Name = "GetEmployeeForCompany")]

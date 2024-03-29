@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Entities.Models;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,7 +11,7 @@ namespace Contracts
 {
     public interface IDataShaper<T>
     {
-        IEnumerable<ExpandoObject> ShapeData(IEnumerable<T> entities, string fieldsString);
-        ExpandoObject ShapeData(T entity, string fieldsString);
+        IEnumerable<ShapedEntity> ShapeData(IEnumerable<T> entities, string fieldsString);
+        ShapedEntity ShapeData(T entity, string fieldsString);
     }
 }

@@ -65,7 +65,7 @@ namespace CompanyEmployees.Presentation.Controllers
             return NoContent();
         }
 
-        [HttpPut("{id:giud}")]
+        [HttpPut("{id:guid}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> UpdateEmployeeForCompany(Guid companyId, Guid id, [FromBody] EmployeeForUpdateDto employee)
         {

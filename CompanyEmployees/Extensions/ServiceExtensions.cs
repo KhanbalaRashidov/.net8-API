@@ -92,7 +92,16 @@ namespace CompanyEmployees.Extensions
                 opt.Conventions.Controller<CompaniesV2Controller>()
                    .HasDeprecatedApiVersion(new ApiVersion(2, 0));
             });
-
         }
+
+        public static void ConfigureResponseCaching(this IServiceCollection services) =>
+            services.AddResponseCaching();
+
+        public static void ConfigureOutputCaching(this IServiceCollection services) =>
+            services.AddOutputCache(opt =>
+            {
+                // opt.AddBasePolicy(bp => bp.Expire(TimeSpan.FromSeconds(10)));
+                opt.AddPolicy("120SecondsDuration", p => p.Expire(TimeSpan.FromSeconds(120)));
+            });
     }
 }

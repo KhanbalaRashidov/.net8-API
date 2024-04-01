@@ -9,6 +9,8 @@ using Service.Contracts;
 using Asp.Versioning;
 using CompanyEmployees.Presentation.Controllers;
 using System.Threading.RateLimiting;
+using Entities.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace CompanyEmployees.Extensions
 {
@@ -114,7 +116,7 @@ namespace CompanyEmployees.Extensions
                 partition => new FixedWindowRateLimiterOptions
                 {
                     AutoReplenishment = true,
-                    PermitLimit = 5,
+                    PermitLimit = 30,
                     QueueLimit = 2,
                     QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
                     Window = TimeSpan.FromMinutes(1)
@@ -141,6 +143,21 @@ namespace CompanyEmployees.Extensions
                             .WriteAsync("Too many requests. Please try again later.", token);
                 };
             });
+        }
+
+        public static void ConfigureIdentity(this IServiceCollection services)
+        {
+            var builder = services.AddIdentity<User, IdentityRole>(o =>
+            {
+                o.Password.RequireDigit = true;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 10;
+                o.User.RequireUniqueEmail = true;
+            })
+                .AddEntityFrameworkStores<RepositoryContext>()
+                .AddDefaultTokenProviders();
         }
     }
 }

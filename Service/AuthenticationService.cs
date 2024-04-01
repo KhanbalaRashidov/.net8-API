@@ -102,6 +102,7 @@ namespace Service
             expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
             signingCredentials: signingCredentials
             );
+
             return tokenOptions;
         }
 

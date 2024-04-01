@@ -1,6 +1,7 @@
 ﻿using Asp.Versioning;
 using CompanyEmployees.Presentation.ActionFilters;
 using CompanyEmployees.Presentation.ModelBinders;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using Service.Contracts;
@@ -11,6 +12,7 @@ namespace CompanyEmployees.Presentation.Controllers
     [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
+    [Authorize]
     // [ResponseCache(CacheProfileName = "120SecondsDuration")]
     [OutputCache(PolicyName = "120SecondsDuration")]
     public class CompaniesController : ControllerBase

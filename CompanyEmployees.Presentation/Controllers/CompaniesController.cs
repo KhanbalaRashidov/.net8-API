@@ -12,7 +12,8 @@ namespace CompanyEmployees.Presentation.Controllers
     [ApiVersion("1.0")]
     [Route("api/companies")]
     [ApiController]
-    [Authorize]
+    [ApiExplorerSettings(GroupName = "v1")]
+   // [Authorize]
     // [ResponseCache(CacheProfileName = "120SecondsDuration")]
     [OutputCache(PolicyName = "120SecondsDuration")]
     public class CompaniesController : ControllerBase
@@ -39,6 +40,9 @@ namespace CompanyEmployees.Presentation.Controllers
         }
 
         [HttpPost(Name = "CreateCompany")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(422)]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> CreateCompany([FromBody] CompanyForCreationDto company)
         {

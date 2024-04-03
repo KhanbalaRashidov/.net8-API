@@ -219,7 +219,7 @@ namespace CompanyEmployees.Extensions
                 });
                 s.SwaggerDoc("v2", new OpenApiInfo
                 {
-                    Title = "Code Maze API",
+                    Title = ".net8 API",
                     Version = "v2"
                 });
 
@@ -236,7 +236,6 @@ namespace CompanyEmployees.Extensions
                     Scheme = "Bearer"
                 });
 
-
                 s.AddSecurityRequirement(new OpenApiSecurityRequirement()
                 {
                   {
@@ -252,7 +251,6 @@ namespace CompanyEmployees.Extensions
                     new List<string>()
                   }
                 });
-
             });
         }
     }
